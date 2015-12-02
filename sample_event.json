@@ -1,0 +1,8 @@
+{
+  "filters": [
+    { "Name": "description", "Values": [ "test *" ] },
+    { "Name": "status", "Values": [ "completed" ] }
+  ],
+  "dryRun": true,
+  "rotate": 7
+}

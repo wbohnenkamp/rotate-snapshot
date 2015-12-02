@@ -1,0 +1,42 @@
+{
+  "name": "rotate-snapshot",
+  "version": "0.1.0",
+  "description": "Rotate EBS snapshots",
+  "main": "index.js",
+  "dependencies": {
+    "async": "~1.5.0",
+    "underscore": "~1.8.3",
+    "aws-sdk": "^2.2.13"
+  },
+  "devDependencies": {
+    "mocha": "^2.3.3",
+    "sinon": "^1.17.2",
+    "proxyquire": "^1.7.3",
+    "eslint": "^1.8.0"
+  },
+  "scripts": {
+    "lint": "eslint *.js",
+    "test": "npm -s run-script lint && mocha --reporter spec test/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:szkkentaro/rotate-snapshot.git"
+  },
+  "author": "szk.kentaro@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/szkkentaro/rotate-snapshot/issues"
+  },
+  "homepage": "https://github.com/szkkentaro/rotate-snapshot",
+  "eslintConfig": {
+    "rules": {
+        "no-console": 0,
+        "indent": [ 2, 2 ],
+        "quotes": [ 2, "double" ],
+        "linebreak-style": [ 2, "unix" ],
+        "semi": [ 2, "always" ]
+    },
+    "env": { "node": true },
+    "extends": "eslint:recommended"
+  }
+}
