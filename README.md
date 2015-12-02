@@ -1,4 +1,6 @@
 # rotate-snapshot
+[![Circle CI](https://circleci.com/gh/szkkentaro/rotate-snapshot/tree/master.svg?style=svg)](https://circleci.com/gh/szkkentaro/rotate-snapshot/tree/master)
+
 This is an AWS lambda function.
 This function rotates snapshots that filtered by event source.
 Spapshots will be kept up to `rotate` number sort by new date.
