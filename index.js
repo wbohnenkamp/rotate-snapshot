@@ -22,6 +22,12 @@ var delParams = function(snapshots, dryRun) {
 var iterator = function(params, callback) {
   console.log("Deleted snapshotId : ", params);
   ec2.deleteSnapshot(params, function(err, data) {
+    if (err) {
+      if (err.hasOwnProperty("code") && err.code == "DryRunOperation") {
+        data = err;
+        err = null;
+      }
+    }
     callback(err, data);
   });
 };
