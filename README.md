@@ -3,6 +3,15 @@ This is an AWS lambda function.
 This function rotates snapshots that filtered by event source.
 Spapshots will be kept up to `rotate` number sort by new date.
 
+## Setup
+
+```console
+cd /path/to/anywhere
+git clone https://github.com/szkkentaro/rotate-snapshot.git
+cd rotate-snapshot
+npm install
+```
+
 ## Sample event
 
 ```json
