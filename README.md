@@ -5,6 +5,30 @@ This is an AWS lambda function.
 This function rotates snapshots that filtered by event source.
 Snapshots will be kept up to `rotate` number sort by new date.
 
+## Usage
+
+If you want to filter with resource tag, you can request event like this.
+```json
+{
+  "filters": [
+    {
+      "Name": "tag:Name",
+      "Values": [
+        "foo"
+      ]
+    },
+    {
+      "Name": "description",
+      "Values": [
+        "Created by *"
+      ]
+    }
+  ],
+  "dryRun": true,
+  "rotate": 7
+}
+```
+
 ## Setup
 
 ```console
