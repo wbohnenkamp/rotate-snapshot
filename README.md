@@ -29,7 +29,7 @@ npm install
 
 ## Event Params
 
-All parametes are reuiqre.
+All parameters are required.
 
 ### filters
 
