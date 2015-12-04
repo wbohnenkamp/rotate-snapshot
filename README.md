@@ -3,7 +3,7 @@
 
 This is an AWS lambda function.
 This function rotates snapshots that filtered by event source.
-Spapshots will be kept up to `rotate` number sort by new date.
+Snapshots will be kept up to `rotate` number sort by new date.
 
 ## Setup
 
