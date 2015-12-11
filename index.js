@@ -84,7 +84,6 @@ exports.handler = function(event, context) {
 
     // find snapshot ids to delete
     var snapshotIds = delList(data.Snapshots, event);
-    console.log(snapshotIds);
     if (+snapshotIds.length == 0) {
       console.log("Do nothing. There is no snapshot to delete.");
       return context.succeed();
