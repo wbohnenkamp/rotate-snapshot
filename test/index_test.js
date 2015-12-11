@@ -3,8 +3,9 @@ var proxyquire = require('proxyquire')
   , sinon      = require('sinon')
   ;
 
-describe('func-rotate-snapshot', function() {
+describe('rotate-snapshot', function() {
   describe('#handler(event, context)', function() {
+    var spy = sinon.spy(console, 'log')
 
     context('when event does not have require param', function() {
       it('should call context.done', function () {
@@ -70,7 +71,6 @@ describe('func-rotate-snapshot', function() {
                   };
                 }
         , lambda = proxyquire('../index', { 'aws-sdk': { EC2: ec2 } })
-        , spy    = sinon.spy(console, 'log')
         ;
 
       lambda.handler({ filters: [], dryRun: true, rotate: 2 }, context);
@@ -82,6 +82,36 @@ describe('func-rotate-snapshot', function() {
       lambda.handler({ filters: [], dryRun: true, rotate: 1 }, context);
       it('should call context.done', function () {
         var params = {DryRun: true, SnapshotId: 's-1'};
+        assert.ok(spy.calledWith('Deleted snapshotId : ', params));
+      });
+
+    });
+
+    context('when event param has daily property', function() {
+      var context = { done: function(err, results) {
+                              assert.deepEqual([{}], results);
+                            },
+                      succeed: function(){}
+                    }
+        , ec2 = function() {
+                  this.describeSnapshots = function(params, callback) {
+                    callback(null, {Snapshots: [
+                      {SnapshotId: 's-1', StartTime: new Date(2015,1,1,1)},
+                      {SnapshotId: 's-2', StartTime: new Date(2015,1,2,1)},
+                      {SnapshotId: 's-3', StartTime: new Date(2015,1,1,2)}
+                    ]})
+                  };
+                  this.deleteSnapshot = function(params, callback) {
+                    assert.deepEqual({ SnapshotId: 's-3', DryRun: true }, params);
+                    callback(null, {});
+                  };
+                }
+        , lambda = proxyquire('../index', { 'aws-sdk': { EC2: ec2 } })
+        ;
+
+      lambda.handler({ filters: [], dryRun: true, rotate: 2, daily: true }, context);
+      it('should call context.done', function () {
+        var params = {DryRun: true, SnapshotId: 's-3'};
         assert.ok(spy.calledWith('Deleted snapshotId : ', params));
       });
 

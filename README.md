@@ -53,16 +53,22 @@ npm install
 
 ## Event Params
 
-All parameters are required.
+### Required
 
-### filters
+#### filters
 
 `filters` params are used for to describe snapshots.
 
-### dryRun
+#### dryRun
 
 `dryRun` param is used to dry-run execution.
 
-### rotate
+#### rotate
 
 Filterd snapshots are hold up to `rotate` number.
+
+### Preserved Options
+
+#### daily
+
+When `daily` param is `true`, it keeps the first snapshot in a day for every each day. And, Filterd snapshots are hold up to `rotate` number.

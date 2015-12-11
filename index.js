@@ -1,21 +1,50 @@
-var aws   = require("aws-sdk")
-  , _     = require("underscore")
-  , async = require("async")
-  , ec2   = new aws.EC2({apiVersion: "2015-10-01"})
+var aws    = require("aws-sdk")
+  , _      = require("underscore")
+  , async  = require("async")
+  , moment = require("moment")
+  , ec2    = new aws.EC2({apiVersion: "2015-10-01"})
   ;
 
-var delList = function(snapshots, rotate) {
+var delList = function(snapshots, event) {
+  if (event.hasOwnProperty("daily")) {
+    var whitelist = _.chain(snapshots)
+                     .groupBy(function(o) {
+                       var m = moment(o.StartTime);
+                       return m.format("YYYYMMDD");
+                     })
+                     .map(function(v) {
+                       return _.chain(v)
+                               .sortBy(function(o) { return o.StartTime.getTime(); })
+                               .first()
+                               .value();
+                     })
+                     .value()
+      , a = _.pluck(snapshots, "SnapshotId")
+      , b = _.pluck(whitelist, "SnapshotId")
+      ;
+
+    return _.map(_.difference(a, b), function(d) {
+      return {"SnapshotId": d};
+    });
+
+  }
+
   return _.chain(snapshots)
-          .sortBy(function(o) { return -o.StartTime.getTime(); })
-          .rest(rotate)
-          .value();
+          .sortBy(function(o) {
+            return -o.StartTime.getTime();
+          })
+          .rest(event.rotate)
+          .map(function(d) {
+            return _.pick(d, "SnapshotId");
+          })
+          .value()
+          ;
 };
 
 var delParams = function(snapshots, dryRun) {
-  return _.chain(snapshots)
-          .map(function(o) { return _.pick(o, "SnapshotId"); })
-          .map(function(o) { return _.extend(o, { DryRun: dryRun }); })
-          .value();
+  return _.map(snapshots, function(o) {
+    return _.extend(o, { DryRun: dryRun });
+  });
 };
 
 // async map iterator
@@ -54,7 +83,8 @@ exports.handler = function(event, context) {
     }
 
     // find snapshot ids to delete
-    var snapshotIds = delList(data.Snapshots, event.rotate);
+    var snapshotIds = delList(data.Snapshots, event);
+    console.log(snapshotIds);
     if (+snapshotIds.length == 0) {
       console.log("Do nothing. There is no snapshot to delete.");
       return context.succeed();
