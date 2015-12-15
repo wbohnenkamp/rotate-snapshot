@@ -61,8 +61,12 @@ All parameters are required.
 
 ### dryRun
 
-`dryRun` param is used to dry-run execution.
+The `dryRun` boolean checks whether you have the required permissions to delete the snapshots, without actually deleting anything, and provides an error response. If you have the required permissions, the error response is DryRunOperation. Otherwise, it is UnauthorizedOperation. Erros are logged to the [Amazon CloudWatch Logs stream associated with the Lambda function](http://docs.aws.amazon.com/lambda/latest/dg/monitoring-functions-logs.html). If you invoke the function using the Lambda console, the console displays the logs in the Log output section. 
 
 ### rotate
 
 Filterd snapshots are hold up to `rotate` number.
+
+## See Also
+
+ * [Official Docs: Programming Model for Authoring Lambda Functions in Node.js](http://docs.aws.amazon.com/lambda/latest/dg/programming-model.html)
